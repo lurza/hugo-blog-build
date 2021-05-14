@@ -1,0 +1,33 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Tutorial: Afbeeldingen optimalizeren met Directus | Brecht's Blog</title><link rel=stylesheet href=https://blog.brechtvermeersch.be/sass/main.min.css><link rel=icon href=favicon.ico type=image/x-icon></head><body><div class=container><header class=mastheader><h3>Brecht's Blog</h3><nav class=display-xs-none><a href=https://blog.brechtvermeersch.be/2021-03-22-must-watch-in-the-javascript-loop/>« prev</a>
+<a href=https://blog.brechtvermeersch.be/2021-03-29-showcase-ksa-website/>next »</a></nav><nav><a href=/>home</a>
+<a href=https://www.linkedin.com/in/brecht-vermeersch target=_blank>contact</a></nav></header><main><article><header><h1>Tutorial: Afbeeldingen optimalizeren met Directus</h1><time datetime=2021-03-29T02:00:00+02:00>29 Mar 2021</time></header><section><p>Op de nieuwe KSA-website laat ik gebruikers toe om foto&rsquo;s up te loaden. Veel KSA-leiders hebben dure camera&rsquo;s, maar vergeten dat de hoge resolutie foto&rsquo;s niet op het web passen. De homepagina van de designer was al 40MB aan foto&rsquo;s.</p><p>Directus is instaat om de resolutie van een afbeelding on the fly aan te passen.</p><p>example.com/assets/_?fit=_&width=_&height=_&quality=_</p><p>Dit in combinatie met srcset kan het resolutieprobleem al een stuk verminderen.</p><div class=highlight><pre class=chroma><code class=language-vue data-lang=vue><span class=c1>// DirectusImage.vue
+</span><span class=c1></span>
+<span class=p>&lt;</span><span class=nt>template</span><span class=p>&gt;</span>
+  <span class=p>&lt;</span><span class=nt>img</span> <span class=nt>:src</span><span class=s>=&#34;url&#34;</span> <span class=nt>:srcset</span><span class=s>=&#34;thumbnails&#34;</span> <span class=p>/&gt;</span>
+<span class=p>&lt;/</span><span class=nt>template</span><span class=p>&gt;</span>
+
+<span class=p>&lt;</span><span class=nt>script</span><span class=p>&gt;</span>
+<span class=kr>import</span> <span class=nx>api</span> <span class=nx>from</span> <span class=s2>&#34;@/services/api.js&#34;</span><span class=p>;</span>
+
+<span class=kr>export</span> <span class=k>default</span> <span class=p>{</span>
+  <span class=nx>props</span><span class=o>:</span> <span class=p>[</span><span class=s2>&#34;asset&#34;</span><span class=p>],</span>
+
+  <span class=nx>data</span><span class=p>()</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=p>{</span> <span class=nx>url</span><span class=o>:</span> <span class=nx>api</span><span class=p>.</span><span class=nx>getAssetUrl</span><span class=p>(</span><span class=k>this</span><span class=p>.</span><span class=nx>asset</span><span class=p>)</span> <span class=p>};</span>
+  <span class=p>},</span>
+
+  <span class=nx>computed</span><span class=o>:</span> <span class=p>{</span>
+    <span class=nx>thumbnails</span><span class=p>()</span> <span class=p>{</span>
+      <span class=k>return</span> <span class=sb>`</span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>url</span><span class=si>}</span><span class=sb>?width=2000 2000w,
+</span><span class=sb>              </span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>url</span><span class=si>}</span><span class=sb>?width=1750 1750w,
+</span><span class=sb>              </span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>url</span><span class=si>}</span><span class=sb>?width=1500 1500w,
+</span><span class=sb>              </span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>url</span><span class=si>}</span><span class=sb>?width=1250 1250w,
+</span><span class=sb>              </span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>url</span><span class=si>}</span><span class=sb>?width=1000 1000w,
+</span><span class=sb>              </span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>url</span><span class=si>}</span><span class=sb>?width=750 750w,
+</span><span class=sb>              </span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>url</span><span class=si>}</span><span class=sb>?width=500 500w,
+</span><span class=sb>              </span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>url</span><span class=si>}</span><span class=sb>?width=250 250w`</span><span class=p>;</span>
+    <span class=p>},</span>
+  <span class=p>},</span>
+<span class=p>};</span>
+<span class=p>&lt;/</span><span class=nt>script</span><span class=p>&gt;</span>
+</code></pre></div></section></article></main></div></body></html>

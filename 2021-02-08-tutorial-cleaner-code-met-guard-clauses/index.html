@@ -1,0 +1,25 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Tutorial: Cleaner Code met Guard Clauses | Brecht's Blog</title><link rel=stylesheet href=https://blog.brechtvermeersch.be/sass/main.min.css><link rel=icon href=favicon.ico type=image/x-icon></head><body><div class=container><header class=mastheader><h3>Brecht's Blog</h3><nav class=display-xs-none><a href=https://blog.brechtvermeersch.be/2021-02-03-showcase-traffic-clock/>« prev</a>
+<a href=https://blog.brechtvermeersch.be/2021-02-15-idee-anti-clickbait/>next »</a></nav><nav><a href=/>home</a>
+<a href=https://www.linkedin.com/in/brecht-vermeersch target=_blank>contact</a></nav></header><main><article><header><h1>Tutorial: Cleaner Code met Guard Clauses</h1><time datetime=2021-02-08T01:00:00+01:00>08 Feb 2021</time></header><section><p>The Single Return Law klinkt voor iedere programmeur wel bekend in de oren. Mensen horen het woord &lsquo;wet&rsquo; en gaan deze dan blindelings opvolgen. Om te begrijpen waarom hij niet meer van toepassing is, moet je ook begrijpen waarom hij er ooit was.</p><p>De wet is nog een overblijfsel van oudere programmeertalen zoals C. In deze talen is het belangrijk om je geheugen netjes op te kuisen als ze niet meer nodig is. Een vroege return zorgt er hier dan voor dat je op meerdere plaatsen je geheugen moet opkuisen. In het slechtste geval vergeet je het ergens en zit je met een memory leak.</p><p>Ondertussen hebben veel programmeertalen een garbage collector waardoor je het geheugen niet meer zelf moet opkuisen. Modernere syntax zoals try-finally of using maakt het opkuisen van resources ook een stuk gemakkelijker.</p><p>Een code smell die ik vaak tegenkom is het diep nesten van if-elses om de Single Return Law onnodig op te volgen. Guard clauses bieden een veel leesbaarder alternatief aan.</p><div class=highlight><pre class=chroma><code class=language-javascript data-lang=javascript><span class=c1>// Single Return Law code
+</span><span class=c1></span><span class=kd>function</span> <span class=nx>merge</span><span class=p>(</span><span class=nx>a</span><span class=p>,</span> <span class=nx>b</span><span class=p>)</span> <span class=p>{</span>
+    <span class=kd>let</span> <span class=nx>result</span><span class=p>;</span>
+    <span class=k>if</span> <span class=p>(</span><span class=nx>a</span> <span class=o>!==</span> <span class=kc>null</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>if</span> <span class=p>(</span><span class=nx>b</span> <span class=o>!==</span> <span class=kc>null</span><span class=p>)</span> <span class=p>{</span>
+            <span class=c1>// merge algoritme
+</span><span class=c1></span>        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+            <span class=nx>result</span> <span class=o>=</span> <span class=nx>a</span><span class=p>;</span>
+        <span class=p>}</span>
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+        <span class=nx>result</span> <span class=o>=</span> <span class=nx>b</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=k>return</span> <span class=nx>result</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></div><div class=highlight><pre class=chroma><code class=language-javascript data-lang=javascript><span class=c1>// Guard clauses
+</span><span class=c1></span><span class=kd>function</span> <span class=nx>merge</span><span class=p>(</span><span class=nx>a</span><span class=p>,</span> <span class=nx>b</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>if</span> <span class=p>(</span><span class=nx>a</span> <span class=o>==</span> <span class=kc>null</span><span class=p>)</span> <span class=k>return</span> <span class=nx>b</span><span class=p>;</span>
+    <span class=k>if</span> <span class=p>(</span><span class=nx>b</span> <span class=o>==</span> <span class=kc>null</span><span class=p>)</span> <span class=k>return</span> <span class=nx>a</span><span class=p>;</span>
+    
+    <span class=c1>// merge algoritme
+</span><span class=c1></span><span class=p>}</span>
+</code></pre></div><p>Inspiratie</p><ul><li><a href=https://wiki.c2.com/?GuardClause>https://wiki.c2.com/?GuardClause</a></li><li><a href="https://www.anthonysteele.co.uk/TheSingleReturnLaw.html#:~:text=I%20wrote%20this%20a%20few,at%20most%20one%20return%20statement">https://www.anthonysteele.co.uk/TheSingleReturnLaw.html#:~:text=I%20wrote%20this%20a%20few,at%20most%20one%20return%20statement</a>.</li></ul></section></article></main></div></body></html>

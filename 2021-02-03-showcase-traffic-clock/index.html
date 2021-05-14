@@ -1,0 +1,21 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Showcase: Traffic Clock | Brecht's Blog</title><link rel=stylesheet href=https://blog.brechtvermeersch.be/sass/main.min.css><link rel=icon href=favicon.ico type=image/x-icon></head><body><div class=container><header class=mastheader><h3>Brecht's Blog</h3><nav class=display-xs-none><a href=https://blog.brechtvermeersch.be/2020-12-09-must-watch-chrome-dev-summit-2020-dag-2/>« prev</a>
+<a href=https://blog.brechtvermeersch.be/2021-02-08-tutorial-cleaner-code-met-guard-clauses/>next »</a></nav><nav><a href=/>home</a>
+<a href=https://www.linkedin.com/in/brecht-vermeersch target=_blank>contact</a></nav></header><main><article><header><h1>Showcase: Traffic Clock</h1><time datetime=2021-02-03T01:00:00+01:00>03 Feb 2021</time></header><section><p>Als er een schoolproject is waar ik trots op ben is het toch wel deze. Voor het vak Cloud en IOT moesten hardware en software doen samenwerken. Ons idee was een klok die enkel maar de waar en wanneer nodig heeft. De klok kijkt dan zelf regelmatig naar verkeersdata en maakt je wakker wanneer het pas echt nodig is.</p><p>Ik was verantwoordelijk voor het cloud gedeelte. Deze Node.js applicatie staat op het cloud platform Glitch. Het is verantwoordelijk voor het bijhouden en doen afgaan van de wekkers. Iedere minuut loopt er een cronjob die alle wekkers overloopt. Per wekker haalt hij de verkeersdata op en kijkt hij of de wekker al moet afgaan. De verkeersdata komt van de Bing Routes api.</p><div class=highlight><pre class=chroma><code class=language-javascript data-lang=javascript><span class=c1>// cron die iedere minuut loopt
+</span><span class=c1></span><span class=kr>export</span> <span class=k>default</span> <span class=kr>async</span> <span class=kd>function</span> <span class=nx>checkAlarms</span><span class=p>()</span> <span class=p>{</span>
+    <span class=kr>const</span> <span class=nx>alarms</span> <span class=o>=</span> <span class=kr>await</span> <span class=nx>alarmRepo</span><span class=p>.</span><span class=nx>index</span><span class=p>();</span>
+
+    <span class=k>for</span> <span class=p>(</span><span class=kd>let</span> <span class=nx>alarm</span> <span class=k>of</span> <span class=nx>alarms</span><span class=p>)</span> <span class=p>{</span>
+        <span class=c1>// async want de verkeersdata komt van een externe api
+</span><span class=c1></span>        <span class=k>if</span> <span class=p>(</span><span class=kr>await</span> <span class=nx>alarmService</span><span class=p>.</span><span class=nx>canRing</span><span class=p>(</span><span class=nx>alarm</span><span class=p>))</span> <span class=p>{</span>
+            <span class=nx>alarmService</span><span class=p>.</span><span class=nx>ring</span><span class=p>(</span><span class=nx>alarm</span><span class=p>);</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></div><p>Met een simpele formule kunnen we bepalen of de wekker al moet afgaan. De preperation time is de tijd die je denkt nodig te hebben om je klaar te maken.</p><div class=highlight><pre class=chroma><code class=language-javascript data-lang=javascript><span class=kr>async</span> <span class=kd>function</span> <span class=nx>canRing</span><span class=p>(</span><span class=nx>alarm</span><span class=p>)</span> <span class=p>{</span>
+ <span class=p>...</span>
+
+ <span class=k>return</span> <span class=p>(</span>
+        <span class=nx>nowEpochSeconds</span> <span class=o>+</span> <span class=nx>preperationSeconds</span> <span class=o>+</span> <span class=nx>travelSeconds</span> <span class=o>&gt;=</span>
+        <span class=nx>arrivalEpochSeconds</span>
+    <span class=p>);</span>
+</code></pre></div><p>Alle code kun je vinden op mijn github: <a href=https://github.com/lurza/iot-traffic-clock-cloud>https://github.com/lurza/iot-traffic-clock-cloud</a></p></section></article></main></div></body></html>
